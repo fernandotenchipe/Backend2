@@ -1,4 +1,4 @@
-import pool from "../db.js";
+import pool from "../utils/db.js";
 import { hashPassword } from "../utils/hash.js";
 import jwt from "jsonwebtoken";
 

@@ -1,4 +1,4 @@
-import pool from '../db.js'; // archivo que creaste con pg + dotenv
+import pool from '../utils/db.js'; // archivo que creaste con pg + dotenv
 
 export const getItems = async (req, res) => {
   try {

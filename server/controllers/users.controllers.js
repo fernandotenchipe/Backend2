@@ -1,5 +1,5 @@
 // controllers/users.controller.js
-import pool from "../db.js";
+import pool from "../utils/db.js";
 import { getSalt, hashPassword } from "../utils/hash.js";
 
 // Obtener todos los usuarios
