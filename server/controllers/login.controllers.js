@@ -1,6 +1,7 @@
 import pool from "../utils/db.js";
 import { hashPassword } from "../utils/hash.js";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 export const login = async (req, res) => {
   try {
@@ -35,9 +36,6 @@ export const login = async (req, res) => {
     return res.status(500).json({ message: "Login failed", error: error.message });
   }
 };
-
-import pool from "../db.js";
-import crypto from "crypto";
 
 export const createUser = async (req, res) => {
   const { username, password } = req.body;
