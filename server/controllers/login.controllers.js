@@ -1,51 +1,65 @@
-import db from "../db/firebase.js";
-import {hashPassword} from "../utils/hash.js";
+import pool from "../db.js";
+import { hashPassword } from "../utils/hash.js";
 import jwt from "jsonwebtoken";
 
 export const login = async (req, res) => {
-    const user = await db.collection("users").doc(req.params.username).get();
-if (!user.exists) {
-    res.json({isLogin: false, user: {}});
-    return;
-}
-const salt = user.data().password.substring(0,process.env.SALT_SIZE);
-const hash = hashPassword(salt, req.body.password,salt);
-const saltedHash = salt + hash;
-let isLogin=user.data().password === saltedHash;
-    if (isLogin) {
-        const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        return res.status(200).json({ message: 'Login success', user: user.data(), isLogin: true, token });
-    } else {
-        return res.status(400).json({ message: 'Login failed', user: {}, isLogin: false });
-    }
-};
-
-export const createUser = async (req, res) => {
+  try {
     const { username, password } = req.body;
 
-    if (!username || !password) {
-        return res.status(400).json({ message: 'Username and password are required' });
+    const result = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
+    const user = result.rows[0];
+
+    if (!user) {
+      return res.status(401).json({ message: "User not found", isLogin: false });
     }
 
-    try {
-        // Generate salt
-        const salt = crypto.randomBytes(24).toString('base64url').substring(0, 10);
+    const storedPassword = user.password; // Formato: salt:hash
+    const [salt, storedHash] = storedPassword.split(":");
 
-        // Concatenate salt and password
-        const newMsg = salt + password;
-        // Create hash
-        const hashing = crypto.createHash("sha512");
-        const hash = hashing.update(newMsg).digest("base64url");
+    const generatedHash = hashPassword(salt, password, salt); // usa mismo salt 2 veces
+    const isLogin = storedHash === generatedHash;
 
-        // Connect to the database and insert user
-        const pool = await sqlConnect();
-        await pool.request()
-            .input("username", sql.VarChar, username)
-            .input("password", sql.VarChar, `${salt}:${hash}`)
-            .query('INSERT INTO [tc3004b].[dbo].[users] (username, password) VALUES (@username, @password)');
-
-        return res.status(201).json({ message: 'User created successfully' });
-    } catch (error) {
-        return res.status(500).json({ message: 'Error creating user', error: error.message });
+    if (!isLogin) {
+      return res.status(401).json({ message: "Invalid credentials", isLogin: false });
     }
+
+    const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+    return res.status(200).json({
+      message: "Login success",
+      user: { id: user.id, username: user.username },
+      isLogin: true,
+      token,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Login failed", error: error.message });
+  }
+};
+
+import pool from "../db.js";
+import crypto from "crypto";
+
+export const createUser = async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ message: "Username and password are required" });
+  }
+
+  try {
+    const salt = crypto.randomBytes(24).toString("base64url").substring(0, 10);
+    const newMsg = salt + password;
+    const hashing = crypto.createHash("sha512");
+    const hash = hashing.update(newMsg).digest("base64url");
+    const saltedHash = `${salt}:${hash}`;
+
+    await pool.query(
+      "INSERT INTO users (username, password) VALUES ($1, $2)",
+      [username, saltedHash]
+    );
+
+    return res.status(201).json({ message: "User created successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Error creating user", error: error.message });
+  }
 };
