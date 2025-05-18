@@ -25,6 +25,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Authorization', 'Content-Type'],
 }));
+console.log("🔥 CORS CONFIGURADO MANUALMENTE");
 
 app.use(morgan('dev'));
 app.use(express.json());
