@@ -1,7 +1,6 @@
 import pool from '../utils/db.js'; // archivo que creaste con pg + dotenv
 
 export const getItems = async (req, res) => {
-    console.log("🚚 ENTRÓ A GET /items");
   try {
     const data = await pool.query("SELECT * FROM items");
     res.json(data.rows);
