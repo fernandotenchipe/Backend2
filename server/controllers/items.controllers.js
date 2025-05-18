@@ -21,13 +21,18 @@ export const getItem = async (req, res) => {
 export const postItem = async (req, res) => {
   try {
     const { name, price } = req.body;
-    await pool.query("INSERT INTO items (name, price) VALUES ($1, $2)", [name, price]);
-    const data = await pool.query("SELECT * FROM items WHERE name = $1 ORDER BY id DESC LIMIT 1", [name]);
+
+    const data = await pool.query(
+      "INSERT INTO items (name, price) VALUES ($1, $2) RETURNING *",
+      [name, price]
+    );
+
     res.status(200).json({ operation: true, item: data.rows[0] });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 export const putItem = async (req, res) => {
   try {
