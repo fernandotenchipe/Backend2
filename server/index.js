@@ -20,7 +20,12 @@ connectDB();
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: ['https://myappl.vercel.app'], // reemplaza con tu dominio real de Vercel
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Authorization', 'Content-Type'],
+}));
+
 app.use(morgan('dev'));
 app.use(express.json());
 
