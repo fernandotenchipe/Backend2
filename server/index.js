@@ -21,11 +21,14 @@ const app = express();
 
 // Middlewares
 app.use(cors({
-  origin: ['https://myappl.vercel.app'], // reemplaza con tu dominio real de Vercel
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  origin: ['https://myappl.vercel.app'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Authorization', 'Content-Type'],
+  credentials: true,
+  optionsSuccessStatus: 204,
 }));
-console.log("🔥 CORS CONFIGURADO MANUALMENTE");
+
+app.options('*', cors());
 
 app.use(morgan('dev'));
 app.use(express.json());
