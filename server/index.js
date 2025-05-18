@@ -20,19 +20,10 @@ connectDB();
 const app = express();
 
 // Middlewares
-app.use(cors({
-  origin: ['https://myappl.vercel.app'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Authorization', 'Content-Type'],
-  credentials: true,
-  optionsSuccessStatus: 204,
-}));
-
-app.options('*', cors());
+app.use(cors());
 
 app.use(morgan('dev'));
 app.use(express.json());
-
 // Rutas
 app.use(indexRoutes);
 app.use(itemsRoutes);   // PostgreSQL
