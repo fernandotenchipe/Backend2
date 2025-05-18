@@ -17,7 +17,7 @@ export const login = async (req, res) => {
     const storedPassword = user.password; // Formato: salt:hash
     const [salt, storedHash] = storedPassword.split(":");
 
-    const generatedHash = hashPassword(salt, password, salt); // usa mismo salt 2 veces
+    const generatedHash = hashPassword(salt, password); 
     const isLogin = storedHash === generatedHash;
 
     if (!isLogin) {
