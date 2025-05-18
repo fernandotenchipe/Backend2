@@ -4,6 +4,8 @@ import {Router} from "express";
 export const validateJWT = Router();
 
 validateJWT.use((req, res, next) => {
+    console.log("🧾 HEADERS EN BACKEND (GET):", req.headers);
+
     let token = req.headers.authorization;
     if (!token) {
         return res.status(401).json({ message: "No token provided" });
