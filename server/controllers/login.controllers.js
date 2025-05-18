@@ -26,11 +26,12 @@ export const login = async (req, res) => {
 
     const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
-    return res.status(200).json({});
+    return res.status(200).json({ user: { id: user.id, username: user.username }, isLogin: true, token });
   } catch (error) {
     return res.status(500).json({ message: "Login failed", error: error.message });
   }
 };
+
 export const createUser = async (req, res) => {
   const { username, password } = req.body;
 
