@@ -19,7 +19,6 @@ export const getItem = async (req, res) => {
 };
 
 export const postItem = async (req, res) => {
-  console.log("🛡️ Usuario autenticado:", req.user);
   try {
     const { name, price } = req.body;
 
