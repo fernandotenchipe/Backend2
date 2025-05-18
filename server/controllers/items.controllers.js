@@ -1,10 +1,14 @@
 import pool from '../utils/db.js'; // archivo que creaste con pg + dotenv
 
 export const getItems = async (req, res) => {
-  console.log("🔥 SE EJECUTÓ EL CONTROLADOR GET /items");
-  res.json([{ id: 1, name: "demo", price: 123 }]);
+    console.log("🚚 ENTRÓ A GET /items");
+  try {
+    const data = await pool.query("SELECT * FROM items");
+    res.json(data.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
-
 
 export const getItem = async (req, res) => {
   try {
