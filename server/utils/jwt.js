@@ -13,8 +13,10 @@ validateJWT.use((req, res, next) => {
     if(token.startsWith("Bearer ")){
         token =token.split(" ")[1];
     }
+    console.log("🧪 TOKEN crudo recibido:", req.headers.authorization);
     jwt.verify(token, process.env.JWT_SECRET, (e, decoded) => {
         if (e) {
+             console.log("❌ Token inválido:", e.message);
             res.status(401).json({ message: "Invalid token" + e.message });
         }
         else {
