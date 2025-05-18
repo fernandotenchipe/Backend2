@@ -36,7 +36,6 @@ export const login = async (req, res) => {
     return res.status(500).json({ message: "Login failed", error: error.message });
   }
 };
-
 export const createUser = async (req, res) => {
   const { username, password } = req.body;
 
@@ -45,10 +44,8 @@ export const createUser = async (req, res) => {
   }
 
   try {
-    const salt = crypto.randomBytes(24).toString("base64url").substring(0, 10);
-    const newMsg = salt + password;
-    const hashing = crypto.createHash("sha512");
-    const hash = hashing.update(newMsg).digest("base64url");
+    const salt = crypto.randomBytes(16).toString("hex");
+    const hash = crypto.createHmac("sha256", salt).update(password).digest("hex");
     const saltedHash = `${salt}:${hash}`;
 
     await pool.query(
