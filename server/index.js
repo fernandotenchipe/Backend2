@@ -21,7 +21,7 @@ const app = express();
 
 // Middlewares
 app.use(cors({
-  origin: "https://...",  // o ['https://...'] si quieres múltiples
+  origin: "https://myappl.vercel.app/",  // o ['https://...'] si quieres múltiples
   credentials: true,
   exposedHeaders: ["Authorization"],
 }));
