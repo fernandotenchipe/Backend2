@@ -21,10 +21,13 @@ const app = express();
 
 // Middlewares
 app.use(cors({
-  origin: "https://myappl.vercel.app",  // o ['https://...'] si quieres múltiples
+  origin: "https://myappl.vercel.app", // o una lista si necesitas más
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
-  exposedHeaders: ["Authorization"],
+  exposedHeaders: ["Authorization"]
 }));
+
 
 app.options('*', cors()); // para preflight
 
