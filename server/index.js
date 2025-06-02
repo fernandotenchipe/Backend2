@@ -20,16 +20,7 @@ connectDB();
 const app = express();
 
 // Middlewares
-app.use(cors({
-  origin: "https://myappl.vercel.app", // o una lista si necesitas más
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
-  exposedHeaders: ["Authorization"]
-}));
-
-
-app.options('*', cors()); // para preflight
+app.use(cors());
 
 app.use(morgan('dev'));
 app.use(express.json());
