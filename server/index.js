@@ -20,7 +20,12 @@ connectDB();
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: "https://...",  // o ['https://...'] si quieres múltiples
+  credentials: true,
+  exposedHeaders: ["Authorization"],
+}));
+app.options('*', cors());
 
 app.use(morgan('dev'));
 app.use(express.json());
